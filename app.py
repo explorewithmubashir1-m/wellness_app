@@ -8,7 +8,7 @@ import numpy as np
 
 # --- CONFIGURATION ---
 MODEL_FILE = 'mental_health_model (6).joblib' 
-GEMINI_MODEL = 'gemini-2.5-flash-preview-09-2025'
+GEMINI_MODEL = 'gemini-3-flash-preview'
 # API Key Source:
 # For local testing, you can hardcode it (not recommended for sharing) or use secrets.
 # We will check secrets first, then fallback to the string you provided.
