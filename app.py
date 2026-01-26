@@ -7,10 +7,13 @@ import requests
 import numpy as np
 
 # --- CONFIGURATION ---
-MODEL_FILE = 'mental_health_model.joblib' 
+MODEL_FILE = 'mental_health_model (6).joblib' 
 GEMINI_MODEL = 'gemini-2.5-flash-preview-09-2025'
-# For deployment, fetch securely from Streamlit Cloud secrets.
-API_KEY = st.secrets.get("GEMINI_API_KEY", None)
+# API Key Source:
+# For local testing, you can hardcode it (not recommended for sharing) or use secrets.
+# We will check secrets first, then fallback to the string you provided.
+#API_KEY = st.secrets.get("GEMINI_API_KEY", "AIzaSyCoowwiFjWrgRj0HCB_LDns2LpmocXXLL0")
+API_KEY="AIzaSyCoowwiFjWrgRj0HCB_LDns2LpmocXXLL0"
 # --- CUSTOM CSS (High-Visibility Neo-Brutalist Theme) ---
 st.markdown("""
 <style>
@@ -175,6 +178,7 @@ def call_gemini(prompt, is_json=True, max_retries=5):
     return None
 
 # --- ML FEATURE PREP ---
+# This list must match the columns in your X_train exactly!
 MODEL_COLUMNS = [
     'Age', 'Gender', 'Academic_Level', 'Avg_Daily_Usage_Hours', 'Affects_Academic_Performance', 'Sleep_Hours_Per_Night', 'Conflicts_Over_Social_Media', 'Addicted_Score', 'Most_Used_Platform_Facebook', 'Most_Used_Platform_Instagram', 'Most_Used_Platform_KakaoTalk', 'Most_Used_Platform_LINE', 'Most_Used_Platform_LinkedIn', 'Most_Used_Platform_Snapchat', 'Most_Used_Platform_TikTok', 'Most_Used_Platform_Twitter', 'Most_Used_Platform_VKontakte', 'Most_Used_Platform_WeChat', 'Most_Used_Platform_WhatsApp', 'Most_Used_Platform_YouTube', 'Relationship_Status_Complicated', 'Relationship_Status_In Relationship', 'Relationship_Status_Single'
 ]
@@ -187,7 +191,7 @@ with st.sidebar:
     st.markdown('<div class="section-header">👤 Profile</div>', unsafe_allow_html=True)
     age = st.number_input("Age", 10, 100, 20)
     gender = st.selectbox("Gender", ["Male", "Female"])
-    academic_level = st.selectbox("Academic Level", ["High School", "Undergraduate", "Graduate"])
+    academic_level = st.selectbox("Academic Level", ["Middle school (6-8 grades)","High School", "Undergraduate", "Graduate"])
     
     st.markdown('<div class="section-header" style="background:#C05640;">📱 Usage</div>', unsafe_allow_html=True)
     avg_daily_usage = st.number_input("Daily Hours", 0.0, 24.0, 4.0, 0.5)
@@ -195,10 +199,11 @@ with st.sidebar:
     addiction = st.slider("Addiction Score", 1, 10, 5)
     
     st.markdown('<div class="section-header" style="background:#EAB308;">❤️ Health</div>', unsafe_allow_html=True)
-    sleep = st.number_input("Sleep Hours", 0.0, 24.0, 7.0, 0.5)
+    sleep = st.number_input("Sleep Hours", 0.0, 24.0, 9.0, 0.5)
     affects_perf = st.selectbox("Impacts Academics?", ["No", "Yes"])
     conflicts = st.number_input("Social Media Conflicts", 0, 10, 0)
-    rel_status = st.selectbox("Status", ["Single", "In a relationship", "Married", "Divorced"])
+    # Note: Updated values to match logical mapping below
+    rel_status = st.selectbox("Status", ["Single", "In a relationship", "Complicated"])
     
     st.markdown("<br>", unsafe_allow_html=True)
     calculate_button = st.button("RUN ANALYSIS ➔")
@@ -214,16 +219,32 @@ if calculate_button:
         input_df['Age'] = age
         input_df['Academic_Level'] = {"High School": 0, "Undergraduate": 1, "Graduate": 2}.get(academic_level, 0)
         input_df['Avg_Daily_Usage_Hours'] = avg_daily_usage
-        input_df['Addicted_Score'] = addiction
-        input_df['Conflicts_Over_Social_Media'] = conflicts
         input_df['Affects_Academic_Performance'] = 1 if affects_perf == "Yes" else 0
-        if 'Sleep_Hours' in MODEL_COLUMNS: input_df['Sleep_Hours'] = sleep
+        input_df['Sleep_Hours_Per_Night'] = sleep
+        input_df['Conflicts_Over_Social_Media'] = conflicts
+        input_df['Addicted_Score'] = addiction
         
-        # One-Hot Encoding
+        # --- FIXED: Direct mapping for health variables ---
+        
+        
+        
+        
+        # --- One-Hot Encoding Platforms ---
         plat_col = f"Most_Used_Platform_{platform}"
-        if plat_col in MODEL_COLUMNS: input_df[plat_col] = 1
-        rel_col = f"Relationship_Status_{rel_status}"
-        if rel_col in MODEL_COLUMNS: input_df[rel_col] = 1
+        if plat_col in MODEL_COLUMNS: 
+            input_df[plat_col] = 1
+            
+        # --- FIXED: Relationship Status Mapping ---
+        # Map user selection to the exact column name required by MODEL_COLUMNS
+        rel_map = {
+            "Single": "Relationship_Status_Single",
+            "In a relationship": "Relationship_Status_In Relationship", # Handles 'a' vs ' ' discrepancy
+            "Complicated": "Relationship_Status_Complicated"
+        }
+        
+        target_col = rel_map.get(rel_status)
+        if target_col and target_col in MODEL_COLUMNS:
+            input_df[target_col] = 1
 
         wellness_score = model.predict(input_df)[0]
         st.session_state['score'] = wellness_score
