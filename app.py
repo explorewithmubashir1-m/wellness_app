@@ -12,7 +12,7 @@ GEMINI_MODEL = 'gemini-2.5-flash-preview-09-2025'
 # API Key Source:
 # For local testing, you can hardcode it (not recommended for sharing) or use secrets.
 # We will check secrets first, then fallback to the string you provided.
-API_KEY = st.secrets.get("GEMINI_API_KEY", "AIzaSyCoowwiFjWrgRj0HCB_LDns2LpmocXXLL0")
+API_KEY = st.secrets.get("GEMINI_API_KEY")
 # --- CUSTOM CSS (High-Visibility Neo-Brutalist Theme) ---
 st.markdown("""
 <style>
@@ -287,6 +287,7 @@ if 'score' in st.session_state:
                     for tip in value.get('tips', []):
                         content += f"<li>{tip}</li>"
                     content += "</ul>"
+                    
                 elif key == 'detox':
                     for day in value.get('days', []):
                         content += f"<b>{day.get('day')}: {day.get('theme')}</b><ul>"
@@ -304,4 +305,4 @@ if 'score' in st.session_state:
             """, unsafe_allow_html=True)
 
 st.markdown("---")
-st.caption("Mature Neo-Brutalist Dashboard • STEAM Fair Project")
+st.caption("STEAM Fair Project")
