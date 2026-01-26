@@ -12,7 +12,7 @@ GEMINI_MODEL = 'gemini-2.5-flash-preview-09-2025'
 # API Key Source:
 # For local testing, you can hardcode it (not recommended for sharing) or use secrets.
 # We will check secrets first, then fallback to the string you provided.
-#API_KEY = st.secrets.get("GEMINI_API_KEY", "AIzaSyCoowwiFjWrgRj0HCB_LDns2LpmocXXLL0")
+API_KEY = st.secrets.get("GEMINI_API_KEY", "AIzaSyCoowwiFjWrgRj0HCB_LDns2LpmocXXLL0")
 API_KEY="AIzaSyCoowwiFjWrgRj0HCB_LDns2LpmocXXLL0"
 # --- CUSTOM CSS (High-Visibility Neo-Brutalist Theme) ---
 st.markdown("""
@@ -180,8 +180,7 @@ def call_gemini(prompt, is_json=True, max_retries=5):
 # --- ML FEATURE PREP ---
 # This list must match the columns in your X_train exactly!
 MODEL_COLUMNS = [
-    'Age', 'Gender', 'Academic_Level', 'Avg_Daily_Usage_Hours', 'Affects_Academic_Performance', 'Sleep_Hours_Per_Night', 'Conflicts_Over_Social_Media', 'Addicted_Score', 'Most_Used_Platform_Facebook', 'Most_Used_Platform_Instagram', 'Most_Used_Platform_KakaoTalk', 'Most_Used_Platform_LINE', 'Most_Used_Platform_LinkedIn', 'Most_Used_Platform_Snapchat', 'Most_Used_Platform_TikTok', 'Most_Used_Platform_Twitter', 'Most_Used_Platform_VKontakte', 'Most_Used_Platform_WeChat', 'Most_Used_Platform_WhatsApp', 'Most_Used_Platform_YouTube', 'Relationship_Status_Complicated', 'Relationship_Status_In Relationship', 'Relationship_Status_Single'
-]
+    'Age', 'Gender', 'Academic_Level', 'Avg_Daily_Usage_Hours', 'Affects_Academic_Performance', 'Sleep_Hours_Per_Night', 'Conflicts_Over_Social_Media', 'Addicted_Score', 'Most_Used_Platform_Facebook', 'Most_Used_Platform_Instagram', 'Most_Used_Platform_KakaoTalk', 'Most_Used_Platform_LINE', 'Most_Used_Platform_LinkedIn', 'Most_Used_Platform_Snapchat', 'Most_Used_Platform_TikTok', 'Most_Used_Platform_Twitter', 'Most_Used_Platform_VKontakte', 'Most_Used_Platform_WeChat', 'Most_Used_Platform_WhatsApp', 'Most_Used_Platform_YouTube', 'Most_Used_Platform_Youtube', 'Relationship_Status_Complicated', 'Relationship_Status_In Relationship', 'Relationship_Status_Single']
 
 # --- UI LOGIC ---
 st.markdown('<h1 style="color:white !important; text-align:center; font-size: 4rem; text-shadow: 4px 4px 0px black;">SOCIAL IMPACT</h1>', unsafe_allow_html=True)
