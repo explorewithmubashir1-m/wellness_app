@@ -161,7 +161,7 @@ def call_gemini(prompt, is_json=True, max_retries=5):
         st.error("Gemini API key is missing. AI features disabled.")
         return None
         
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key={API_KEY}"
     for i in range(max_retries):
         payload = {"contents": [{"parts": [{"text": prompt}]}]}
         if is_json:
