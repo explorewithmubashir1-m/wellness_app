@@ -12,7 +12,7 @@ GEMINI_MODEL = 'gemini-3-flash'
 # API Key Source:
 # For local testing, you can hardcode it (not recommended for sharing) or use secrets.
 # We will check secrets first, then fallback to the string you provided.
-API_KEY = st.secrets.get("GEMINI_API_KEY")
+API_KEY = st.secrets.get(GEMINI_API_KEY)
 # --- CUSTOM CSS (High-Visibility Neo-Brutalist Theme) ---
 st.markdown("""
 <style>
