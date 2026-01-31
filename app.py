@@ -155,25 +155,44 @@ def load_ml_model():
 
 model = load_ml_model()
 
-# --- GEMINI API CALL HANDLER ---
-def call_gemini(prompt, is_json=True, max_retries=5):
+# --- IMPROVED GEMINI API HANDLER ---
+def call_gemini(prompt, is_json=True, max_retries=3):
     if not API_KEY:
-        st.error("Gemini API key is missing. AI features disabled.")
+        st.error("⚠️ Gemini API key is missing. Check your .streamlit/secrets.toml file.")
         return None
         
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key={API_KEY}"
+    # Updated URL to use the standard 1.5 flash model
+    url = f"[https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=](https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=){API_KEY}"
+    
+    headers = {'Content-Type': 'application/json'}
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    
+    if is_json:
+        payload["generationConfig"] = {"responseMimeType": "application/json"}
+
     for i in range(max_retries):
-        payload = {"contents": [{"parts": [{"text": prompt}]}]}
-        if is_json:
-            payload["generationConfig"] = {"responseMimeType": "application/json"}
         try:
-            response = requests.post(url, headers={'Content-Type': 'application/json'}, json=payload, timeout=20)
-            if response.status_code == 200:
-                data = response.json()
-                return data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text')
+            response = requests.post(url, headers=headers, json=payload, timeout=20)
+            
+            # Check for API Errors (400, 403, 500)
+            if response.status_code != 200:
+                st.error(f"API Error {response.status_code}: {response.text}")
+                return None
+
+            data = response.json()
+            # Extract text safely
+            result_text = data.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text')
+            
+            # CLEANUP: Remove markdown backticks if present
+            if result_text:
+                result_text = result_text.replace("```json", "").replace("```", "").strip()
+                return result_text
+                
+        except Exception as e:
+            st.warning(f"Attempt {i+1} failed: {e}")
             time.sleep(1)
-        except Exception:
-            pass
+            
+    st.error("Failed to get response from Gemini after multiple retries.")
     return None
 
 # --- ML FEATURE PREP ---
