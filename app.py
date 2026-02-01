@@ -7,7 +7,7 @@ import requests
 import numpy as np
 
 # --- CONFIGURATION ---
-MODEL_FILE = 'mental_health_model (6).joblib' 
+MODEL_FILE = 'model.joblib' 
 GEMINI_MODEL = 'gemini-2.5-flash-preview-09-2025'
 # For deployment, fetch securely from Streamlit Cloud secrets.
 API_KEY = st.secrets.get("GEMINI_API_KEY", None)
@@ -176,8 +176,7 @@ def call_gemini(prompt, is_json=True, max_retries=5):
 
 # --- ML FEATURE PREP ---
 MODEL_COLUMNS = [
-    'Age', 'Gender', 'Academic_Level', 'Avg_Daily_Usage_Hours', 'Affects_Academic_Performance', 'Sleep_Hours_Per_Night', 'Conflicts_Over_Social_Media', 'Addicted_Score', 'Most_Used_Platform_Facebook', 'Most_Used_Platform_Instagram', 'Most_Used_Platform_KakaoTalk', 'Most_Used_Platform_LINE', 'Most_Used_Platform_LinkedIn', 'Most_Used_Platform_Snapchat', 'Most_Used_Platform_TikTok', 'Most_Used_Platform_Twitter', 'Most_Used_Platform_VKontakte', 'Most_Used_Platform_WeChat', 'Most_Used_Platform_WhatsApp', 'Most_Used_Platform_YouTube', 'Relationship_Status_Complicated', 'Relationship_Status_In Relationship', 'Relationship_Status_Single'
-]
+    'Age', 'Gender', 'Academic_Level', 'Avg_Daily_Usage_Hours', 'Affects_Academic_Performance', 'Sleep_Hours_Per_Night', 'Conflicts_Over_Social_Media', 'Addicted_Score', 'Most_Used_Platform_Facebook', 'Most_Used_Platform_Instagram', 'Most_Used_Platform_KakaoTalk', 'Most_Used_Platform_LINE', 'Most_Used_Platform_LinkedIn', 'Most_Used_Platform_Snapchat', 'Most_Used_Platform_TikTok', 'Most_Used_Platform_Twitter', 'Most_Used_Platform_VKontakte', 'Most_Used_Platform_WeChat', 'Most_Used_Platform_WhatsApp', 'Most_Used_Platform_YouTube', 'Most_Used_Platform_Youtube', 'Relationship_Status_Complicated', 'Relationship_Status_In Relationship', 'Relationship_Status_Single']
 
 # --- UI LOGIC ---
 st.markdown('<h1 style="color:white !important; text-align:center; font-size: 4rem; text-shadow: 4px 4px 0px black;">SOCIAL IMPACT</h1>', unsafe_allow_html=True)
@@ -187,7 +186,7 @@ with st.sidebar:
     st.markdown('<div class="section-header">👤 Profile</div>', unsafe_allow_html=True)
     age = st.number_input("Age", 10, 100, 20)
     gender = st.selectbox("Gender", ["Male", "Female"])
-    academic_level = st.selectbox("Academic Level", ["High School", "Undergraduate", "Graduate"])
+    academic_level = st.selectbox("Academic Level", ["Middle school (6-8 grades)" ,"High School", "Undergraduate", "Graduate"])
     
     st.markdown('<div class="section-header" style="background:#C05640;">📱 Usage</div>', unsafe_allow_html=True)
     avg_daily_usage = st.number_input("Daily Hours", 0.0, 24.0, 4.0, 0.5)
@@ -212,7 +211,7 @@ if calculate_button:
     try:
         input_df['Gender'] = 1 if gender == "Female" else 0 
         input_df['Age'] = age
-        input_df['Academic_Level'] = {"High School": 0, "Undergraduate": 1, "Graduate": 2}.get(academic_level, 0)
+        input_df['Academic_Level'] = {"High School": 0, "Undergraduate": 1, "Graduate": 2, "Middle school (6-8 grades)":3}.get(academic_level, 0)
         input_df['Avg_Daily_Usage_Hours'] = avg_daily_usage
         input_df['Addicted_Score'] = addiction
         input_df['Conflicts_Over_Social_Media'] = conflicts
