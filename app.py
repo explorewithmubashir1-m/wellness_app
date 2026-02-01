@@ -186,7 +186,7 @@ with st.sidebar:
     st.markdown('<div class="section-header">👤 Profile</div>', unsafe_allow_html=True)
     age = st.number_input("Age", 10, 100, 20)
     gender = st.selectbox("Gender", ["Male", "Female"])
-    academic_level = st.selectbox("Academic Level", ["High School", "Undergraduate", "Graduate"])
+    academic_level = st.selectbox("Academic Level", ["High School", "Undergraduate", "Graduate", "Middle School (6-8 grades)"])
     
     st.markdown('<div class="section-header" style="background:#C05640;">📱 Usage</div>', unsafe_allow_html=True)
     avg_daily_usage = st.number_input("Daily Hours", 0.0, 24.0, 4.0, 0.5)
@@ -211,7 +211,7 @@ if calculate_button:
     try:
         input_df['Gender'] = 1 if gender == "Female" else 0 
         input_df['Age'] = age
-        input_df['Academic_Level'] = {"High School": 0, "Undergraduate": 1, "Graduate": 2}.get(academic_level, 0)
+        input_df['Academic_Level'] = {"High School": 0, "Undergraduate": 1, "Graduate": 2, "Middle School (6-8 grades): 3"}.get(academic_level, 0)
         input_df['Avg_Daily_Usage_Hours'] = avg_daily_usage
         input_df['Addicted_Score'] = addiction
         input_df['Conflicts_Over_Social_Media'] = conflicts
