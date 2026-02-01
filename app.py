@@ -8,7 +8,7 @@ import numpy as np
 
 # --- CONFIGURATION ---
 MODEL_FILE = 'mental_health_model (6).joblib' 
-GEMINI_MODEL = 'gemini-2.5-flash-preview-09-2025'
+GEMINI_MODEL = 'gemini-2.5-flash'
 # For deployment, fetch securely from Streamlit Cloud secrets.
 API_KEY = st.secrets.get("GEMINI_API_KEY", None)
 # --- CUSTOM CSS (High-Visibility Neo-Brutalist Theme) ---
@@ -211,7 +211,7 @@ if calculate_button:
     try:
         input_df['Gender'] = 1 if gender == "Female" else 0 
         input_df['Age'] = age
-        input_df['Academic_Level'] = {"High School": 0, "Undergraduate": 1, "Graduate": 2, "Middle School (6-8 grades): 3"}.get(academic_level, 0)
+        input_df['Academic_Level'] = {"High School": 0, "Undergraduate": 1, "Graduate": 2, "Middle School (6-8 grades)": 3}.get(academic_level, 0)
         input_df['Avg_Daily_Usage_Hours'] = avg_daily_usage
         input_df['Addicted_Score'] = addiction
         input_df['Conflicts_Over_Social_Media'] = conflicts
