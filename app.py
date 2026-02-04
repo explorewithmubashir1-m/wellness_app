@@ -234,7 +234,7 @@ if 'score' in st.session_state:
     score = st.session_state['score']
     st.markdown(f"""
     <div class="score-box">
-        <h2 style='margin-bottom:0; font-weight:900;'>WELLNESS SCORE</h2>
+        <h2 style='margin-bottom:0; font-weight:900;'>Mental Health Score</h2>
         <h1 style='font-size: 6rem; color: {'#C05640' if score < 5 else '#3F7D88'}; font-weight: 900;'>{score:.2f} / 10</h1>
     </div>
     """, unsafe_allow_html=True)
